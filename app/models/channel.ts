@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 import { BaseModel, belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
 import User from './user.js'
 import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
+import { ChannelType } from '../enums/channel_type.js'
 
 export default class Channel extends BaseModel {
   @column({ isPrimary: true })
@@ -12,6 +13,9 @@ export default class Channel extends BaseModel {
 
   @column()
   declare name: string
+
+  @column()
+  declare type: ChannelType
 
   @column()
   declare avatarUrl?: string

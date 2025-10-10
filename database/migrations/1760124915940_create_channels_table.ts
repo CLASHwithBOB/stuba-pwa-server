@@ -1,4 +1,5 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
+import { ChannelType } from '../../app/enums/channel_type.js'
 
 export default class extends BaseSchema {
   protected tableName = 'channels'
@@ -9,6 +10,7 @@ export default class extends BaseSchema {
       table.integer('user_id').references('id').inTable('users').onDelete('CASCADE')
       table.string('name').notNullable().unique()
       table.string('avatar_url').nullable()
+      table.enum('type', [ChannelType.PUBLIC, ChannelType.PRIVATE]).notNullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })
