@@ -6,6 +6,8 @@ const LoginController = () => import('#controllers/auth/login_controller')
 const LogoutController = () => import('#controllers/auth/logout_controller')
 const MeController = () => import('#controllers/auth/me_controller')
 
+const UserController = () => import('#controllers/user_controller')
+
 router
   .group(() => {
     router.post('register', [RegisterController, 'store']).as('register')
@@ -20,3 +22,10 @@ router
   })
   .prefix('auth')
   .as('auth.')
+
+router
+  .group(() => {
+    router.patch('user', [UserController, 'update']).as('user.update')
+  })
+  .use(middleware.auth())
+  .prefix('api')
