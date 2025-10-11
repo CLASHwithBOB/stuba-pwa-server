@@ -7,6 +7,7 @@ const LogoutController = () => import('#controllers/auth/logout_controller')
 const MeController = () => import('#controllers/auth/me_controller')
 
 const UserController = () => import('#controllers/user_controller')
+const ChannelController = () => import('#controllers/channel_controller')
 
 router
   .group(() => {
@@ -26,6 +27,11 @@ router
 router
   .group(() => {
     router.patch('user', [UserController, 'update']).as('user.update')
+
+    router.get('channels', [ChannelController, 'index']).as('channel.index')
+    router.post('channels', [ChannelController, 'store']).as('channel.store')
+    router.patch('channels/:id', [ChannelController, 'update']).as('channel.update')
+    router.delete('channels/:id', [ChannelController, 'destroy']).as('channel.destroy')
   })
   .use(middleware.auth())
   .prefix('api')
