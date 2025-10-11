@@ -1,10 +1,12 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { UserStatus } from '../enums/user_status.js'
+import Channel from './channel.js'
+import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -34,4 +36,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare updatedAt: DateTime | null
 
   static accessTokens = DbAccessTokensProvider.forModel(User)
+
+  @hasMany(() => Channel)
+  declare channels: HasMany<typeof Channel>
+
+  @manyToMany(() => Channel, {
+    pivotTable: 'channel_user',
+  })
+  declare joinedChannels: ManyToMany<typeof Channel>
 }
