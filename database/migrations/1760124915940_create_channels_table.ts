@@ -7,10 +7,11 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary().notNullable()
-      table.integer('user_id').references('id').inTable('users').onDelete('CASCADE')
+      table.integer('user_id').references('id').inTable('users').onDelete('CASCADE').index()
+
       table.string('name').notNullable().unique()
       table.string('avatar_url').nullable()
-      table.enum('type', [ChannelType.PUBLIC, ChannelType.PRIVATE]).notNullable()
+      table.enum('type', [ChannelType.PUBLIC, ChannelType.PRIVATE]).notNullable().index()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })
