@@ -6,8 +6,9 @@ const LoginController = () => import('#controllers/auth/login_controller')
 const LogoutController = () => import('#controllers/auth/logout_controller')
 const MeController = () => import('#controllers/auth/me_controller')
 
-const UserController = () => import('#controllers/user_controller')
-const ChannelController = () => import('#controllers/channel_controller')
+const UsersController = () => import('#controllers/users_controller')
+const ChannelsController = () => import('#controllers/channels_controller')
+const MessageController = () => import('#controllers/messages_controller')
 
 router
   .group(() => {
@@ -26,12 +27,10 @@ router
 
 router
   .group(() => {
-    router.patch('user', [UserController, 'update']).as('user.update')
+    router.patch('user', [UsersController, 'update']).as('user.update')
 
-    router.get('channels', [ChannelController, 'index']).as('channel.index')
-    router.post('channels', [ChannelController, 'store']).as('channel.store')
-    router.patch('channels/:id', [ChannelController, 'update']).as('channel.update')
-    router.delete('channels/:id', [ChannelController, 'destroy']).as('channel.destroy')
+    router.resource('channels', ChannelsController).apiOnly()
+    router.post('channels/:id/messages', MessageController)
   })
   .use(middleware.auth())
   .prefix('api')

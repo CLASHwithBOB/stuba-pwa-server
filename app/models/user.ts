@@ -7,6 +7,7 @@ import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { UserStatus } from '../enums/user_status.js'
 import Channel from './channel.js'
 import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
+import Message from './message.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -44,4 +45,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
     pivotTable: 'channel_user',
   })
   declare joinedChannels: ManyToMany<typeof Channel>
+
+  @hasMany(() => Message)
+  declare messages: HasMany<typeof Message>
 }

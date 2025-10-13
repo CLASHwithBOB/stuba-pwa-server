@@ -1,7 +1,7 @@
 import { updateValidator } from '#validators/user_validator'
 import type { HttpContext } from '@adonisjs/core/http'
 
-export default class UserController {
+export default class UsersController {
   async update({ request, response, auth }: HttpContext) {
     const user = auth.user!
 
