@@ -7,8 +7,20 @@ export default class MembersController {
   async destroy({ response, auth, params }: HttpContext) {
     const user = auth.user!
 
-    const channel = await Channel.findOrFail(params.id)
-    const target = await User.findByOrFail({ nickname: params.nickname })
+    const channel = await Channel.find(params.id)
+    if (!channel) {
+      return response.notFound({ message: 'Channel not found' })
+    }
+
+    const target = await User.findBy({ nickname: params.nickname })
+    if (!target) {
+      return response.notFound({ message: `User ${params.nickname} not found` })
+    }
+
+    const channelUser = await channel.related('users').query().where('user_id', target.id).first()
+    if (!channelUser) {
+      return response.notFound({ message: `${target.nickname} is not a member of the channel` })
+    }
 
     if (user.id === target.id) {
       return response.badRequest({ message: 'You cannot remove yourself from the channel' })
