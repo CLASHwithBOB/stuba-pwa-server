@@ -18,9 +18,6 @@ export default class Channel extends BaseModel {
   @column()
   declare type: ChannelType
 
-  @column()
-  declare avatarUrl?: string
-
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

@@ -4,6 +4,8 @@ import { UserStatus } from '../enums/user_status.js'
 export const updateValidator = (userId: number) =>
   vine.compile(
     vine.object({
+      firstName: vine.string().minLength(1).maxLength(255).optional(),
+      lastName: vine.string().minLength(1).maxLength(255).optional(),
       nickname: vine
         .string()
         .minLength(3)
@@ -18,5 +20,6 @@ export const updateValidator = (userId: number) =>
         })
         .optional(),
       status: vine.enum(Object.values(UserStatus)).optional(),
+      avatar: vine.string().url().optional(),
     })
   )

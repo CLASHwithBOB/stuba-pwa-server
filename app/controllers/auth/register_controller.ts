@@ -5,12 +5,12 @@ import { UserStatus } from '../../enums/user_status.js'
 
 export default class RegisterController {
   async store({ request }: HttpContext) {
-    const payload = {
+    const validated = {
       ...(await request.validateUsing(registerValidator)),
       status: UserStatus.ONLINE,
     }
 
-    const user = await User.create(payload)
+    const user = await User.create(validated)
 
     return User.accessTokens.create(user)
   }

@@ -8,9 +8,12 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary().notNullable()
 
+      table.string('first_name').notNullable()
+      table.string('last_name').notNullable()
       table.string('nickname').notNullable().unique()
       table.string('email', 254).notNullable().unique()
       table.string('password').notNullable()
+      table.text('avatar').notNullable()
       table.enum('status', [UserStatus.ONLINE, UserStatus.DND, UserStatus.OFFLINE]).notNullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

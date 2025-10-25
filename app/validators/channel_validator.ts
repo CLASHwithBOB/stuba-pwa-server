@@ -12,12 +12,6 @@ export const storeValidator = vine.compile(
         return !channel
       }),
     type: vine.enum(Object.values(ChannelType)),
-    avatar: vine
-      .file({
-        size: '2mb',
-        extnames: ['jpg', 'jpeg', 'png', 'webp'],
-      })
-      .optional(),
   })
 )
 
@@ -35,12 +29,6 @@ export const updateValidator = (channelId: number) =>
             .whereNot('id', channelId)
             .first()
           return !channel
-        })
-        .optional(),
-      avatar: vine
-        .file({
-          size: '2mb',
-          extnames: ['jpg', 'jpeg', 'png', 'webp'],
         })
         .optional(),
     })
