@@ -2,6 +2,8 @@ import vine from '@vinejs/vine'
 
 export const registerValidator = vine.compile(
   vine.object({
+    firstName: vine.string().minLength(1).maxLength(63),
+    lastName: vine.string().minLength(1).maxLength(63),
     nickname: vine
       .string()
       .minLength(3)
@@ -18,5 +20,6 @@ export const registerValidator = vine.compile(
         return !user
       }),
     password: vine.string().minLength(8).maxLength(255),
+    avatar: vine.string().url(),
   })
 )

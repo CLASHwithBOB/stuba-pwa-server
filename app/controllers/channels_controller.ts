@@ -13,9 +13,9 @@ export default class ChannelsController {
   async store({ request, response, auth }: HttpContext) {
     const user = auth.user!
 
-    const { name, type, avatar } = await request.validateUsing(storeValidator)
+    const validated = await request.validateUsing(storeValidator)
 
-    const channel = await user.related('channels').create({ name, type })
+    const channel = await user.related('channels').create(validated)
 
     return response.created({ channel })
   }
@@ -31,9 +31,9 @@ export default class ChannelsController {
     const user = auth.user!
     const channel = await user.related('channels').query().where('id', params.id).firstOrFail()
 
-    const { name, avatar } = await request.validateUsing(updateValidator(channel.id))
+    const validated = await request.validateUsing(updateValidator(channel.id))
 
-    channel.merge({ name })
+    channel.merge(validated)
     await channel.save()
 
     return response.ok(channel)

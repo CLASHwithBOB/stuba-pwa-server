@@ -19,10 +19,19 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare id: number
 
   @column()
-  declare nickname: string | null
+  declare firstName: string
+
+  @column()
+  declare lastName: string
+
+  @column()
+  declare nickname: string
 
   @column()
   declare email: string
+
+  @column()
+  declare avatar: string
 
   @column()
   declare status: UserStatus
