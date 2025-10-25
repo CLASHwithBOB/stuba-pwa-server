@@ -8,6 +8,7 @@ export const registerValidator = vine.compile(
       .string()
       .minLength(3)
       .maxLength(63)
+      .regex(/^[a-z0-9_-]+$/)
       .unique(async (query, field) => {
         const user = await query.from('users').where('nickname', field).first()
         return !user

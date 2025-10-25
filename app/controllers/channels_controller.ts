@@ -5,7 +5,7 @@ export default class ChannelsController {
   async index({ response, auth }: HttpContext) {
     const user = auth.user!
 
-    const channels = await user.related('channels').query()
+    const channels = await user.related('joinedChannels').query()
 
     return response.ok({ channels })
   }
@@ -16,13 +16,18 @@ export default class ChannelsController {
     const validated = await request.validateUsing(storeValidator)
 
     const channel = await user.related('channels').create(validated)
+    channel.related('users').attach([user.id])
 
     return response.created({ channel })
   }
 
   async show({ response, auth, params }: HttpContext) {
     const user = auth.user!
-    const channel = await user.related('channels').query().where('id', params.id).firstOrFail()
+    const channel = await user
+      .related('joinedChannels')
+      .query()
+      .where('id', params.id)
+      .firstOrFail()
 
     return response.ok(channel)
   }

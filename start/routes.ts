@@ -8,6 +8,7 @@ const MeController = () => import('#controllers/auth/me_controller')
 
 const UsersController = () => import('#controllers/users_controller')
 const ChannelsController = () => import('#controllers/channels_controller')
+const MembersController = () => import('#controllers/members_controller')
 const MessageController = () => import('#controllers/messages_controller')
 
 router
@@ -30,7 +31,10 @@ router
     router.patch('user', [UsersController, 'update']).as('user.update')
 
     router.resource('channels', ChannelsController).apiOnly()
-    router.post('channels/:id/messages', MessageController)
+    router.post('channels/:id/messages', [MessageController, 'store']).as('messages.store')
+    router
+      .delete('channels/:id/members/:nickname', [MembersController, 'destroy'])
+      .as('members.destroy')
   })
   .use(middleware.auth())
   .prefix('api')
