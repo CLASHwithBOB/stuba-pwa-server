@@ -5,9 +5,9 @@ export default class ChannelsController {
   async index({ response, auth }: HttpContext) {
     const user = auth.user!
 
-    const channels = await user.related('channels').query()
+    const channels = await user.related('memberChannels').query()
 
-    return response.ok({ channels })
+    return response.ok(channels)
   }
 
   async store({ request, response, auth }: HttpContext) {
@@ -15,21 +15,26 @@ export default class ChannelsController {
 
     const validated = await request.validateUsing(storeValidator)
 
-    const channel = await user.related('channels').create(validated)
+    const channel = await user.related('ownedChannels').create({ ...validated })
+    channel.related('members').attach([user.id])
 
-    return response.created({ channel })
+    return response.created(channel)
   }
 
   async show({ response, auth, params }: HttpContext) {
     const user = auth.user!
-    const channel = await user.related('channels').query().where('id', params.id).firstOrFail()
+    const channel = await user
+      .related('memberChannels')
+      .query()
+      .where('id', params.id)
+      .firstOrFail()
 
     return response.ok(channel)
   }
 
   async update({ request, response, auth, params }: HttpContext) {
     const user = auth.user!
-    const channel = await user.related('channels').query().where('id', params.id).firstOrFail()
+    const channel = await user.related('ownedChannels').query().where('id', params.id).firstOrFail()
 
     const validated = await request.validateUsing(updateValidator(channel.id))
 
@@ -41,10 +46,10 @@ export default class ChannelsController {
 
   async destroy({ response, auth, params }: HttpContext) {
     const user = auth.user!
-    const channel = await user.related('channels').query().where('id', params.id).firstOrFail()
+    const channel = await user.related('ownedChannels').query().where('id', params.id).firstOrFail()
 
     await channel.delete()
 
-    return response.ok({ channel })
+    return response.ok(channel)
   }
 }
