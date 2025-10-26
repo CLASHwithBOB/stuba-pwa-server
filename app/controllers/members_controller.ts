@@ -17,7 +17,7 @@ export default class MembersController {
       return response.notFound({ message: `User ${params.nickname} not found` })
     }
 
-    const channelUser = await channel.related('users').query().where('user_id', target.id).first()
+    const channelUser = await channel.related('members').query().where('user_id', target.id).first()
     if (!channelUser) {
       return response.notFound({ message: `${target.nickname} is not a member of the channel` })
     }
@@ -52,7 +52,11 @@ export default class MembersController {
       })
     }
 
-    channel.related('users').detach([target.id])
+    await channel
+      .related('members')
+      .query()
+      .where('user_id', target.id)
+      .update({ kicked_at: new Date() })
     await ChannelKickVote.query()
       .where('channel_id', channel.id)
       .andWhere('target_user_id', target.id)

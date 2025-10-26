@@ -1,9 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
 import User from './user.js'
-import type { BelongsTo, HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
 import { ChannelType } from '../enums/channel_type.js'
-import Message from './message.js'
 
 export default class Channel extends BaseModel {
   @column({ isPrimary: true })
@@ -25,13 +24,11 @@ export default class Channel extends BaseModel {
   declare updatedAt: DateTime
 
   @belongsTo(() => User)
-  declare user: BelongsTo<typeof User>
+  declare owner: BelongsTo<typeof User>
 
   @manyToMany(() => User, {
-    pivotTable: 'channel_user',
+    pivotTable: 'members',
+    pivotColumns: ['kicked_at', 'created_at', 'updated_at'],
   })
-  declare users: ManyToMany<typeof User>
-
-  @hasMany(() => Message)
-  declare messages: HasMany<typeof Message>
+  declare members: ManyToMany<typeof User>
 }

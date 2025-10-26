@@ -4,7 +4,7 @@ import User from './user.js'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Channel from './channel.js'
 
-export default class ChannelKickVote extends BaseModel {
+export default class Member extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -12,10 +12,10 @@ export default class ChannelKickVote extends BaseModel {
   declare channelId: number
 
   @column()
-  declare targetUserId: number
+  declare userId: number
 
   @column()
-  declare voterUserId: number
+  declare kickedAt: DateTime | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -23,16 +23,9 @@ export default class ChannelKickVote extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
+  @belongsTo(() => User)
+  declare user: BelongsTo<typeof User>
+
   @belongsTo(() => Channel)
   declare channel: BelongsTo<typeof Channel>
-
-  @belongsTo(() => User, {
-    foreignKey: 'targetUserId',
-  })
-  declare targetUser: BelongsTo<typeof User>
-
-  @belongsTo(() => User, {
-    foreignKey: 'voterUserId',
-  })
-  declare voterUser: BelongsTo<typeof User>
 }

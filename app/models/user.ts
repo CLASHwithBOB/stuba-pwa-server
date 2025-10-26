@@ -7,7 +7,7 @@ import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { UserStatus } from '../enums/user_status.js'
 import Channel from './channel.js'
 import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
-import Message from './message.js'
+import ChannelKickVote from './channel_kick_vote.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -48,13 +48,16 @@ export default class User extends compose(BaseModel, AuthFinder) {
   static accessTokens = DbAccessTokensProvider.forModel(User)
 
   @hasMany(() => Channel)
-  declare channels: HasMany<typeof Channel>
+  declare ownedChannels: HasMany<typeof Channel>
 
   @manyToMany(() => Channel, {
-    pivotTable: 'channel_user',
+    pivotTable: 'members',
+    pivotColumns: ['kicked_at', 'created_at', 'updated_at'],
   })
-  declare joinedChannels: ManyToMany<typeof Channel>
+  declare memberChannels: ManyToMany<typeof Channel>
 
-  @hasMany(() => Message)
-  declare messages: HasMany<typeof Message>
+  @hasMany(() => ChannelKickVote, {
+    foreignKey: 'targetUserId',
+  })
+  declare kickVotesReceived: HasMany<typeof ChannelKickVote>
 }
