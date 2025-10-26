@@ -13,7 +13,7 @@ export default class extends BaseSchema {
       table.string('nickname').notNullable().unique()
       table.string('email', 254).notNullable().unique()
       table.string('password').notNullable()
-      table.text('avatar').notNullable()
+      table.text('avatar').nullable()
       table.enum('status', [UserStatus.ONLINE, UserStatus.DND, UserStatus.OFFLINE]).notNullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
