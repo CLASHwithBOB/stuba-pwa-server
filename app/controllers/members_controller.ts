@@ -4,13 +4,18 @@ import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class MembersController {
+  async index({ response, params }: HttpContext) {
+    const channel = await Channel.findOrFail(params.id)
+
+    const members = await channel.related('members').query().whereNull('kicked_at')
+
+    return response.ok(members)
+  }
+
   async destroy({ response, auth, params }: HttpContext) {
     const user = auth.user!
 
-    const channel = await Channel.find(params.id)
-    if (!channel) {
-      return response.notFound({ message: 'Channel not found' })
-    }
+    const channel = await Channel.findOrFail(params.id)
 
     const target = await User.findBy({ nickname: params.nickname })
     if (!target) {
