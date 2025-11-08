@@ -12,6 +12,27 @@ export default class MembersController {
     return response.ok(members)
   }
 
+  async update({ response, auth, params }: HttpContext) {
+    const user = auth.user!
+
+    const channel = await Channel.findOrFail(params.id)
+
+    const channelUser = await channel.related('members').query().where('user_id', user.id).first()
+    if (!channelUser) {
+      return response.notFound({ message: `You are not a member of the channel` })
+    }
+
+    if (channel.userId === user.id) {
+      await channel.delete()
+
+      return response.ok({ message: `You have deleted the channel` })
+    }
+
+    await channel.related('members').query().where('user_id', user.id).delete()
+
+    return response.ok({ message: `You have left the channel` })
+  }
+
   async destroy({ response, auth, params }: HttpContext) {
     const user = auth.user!
 

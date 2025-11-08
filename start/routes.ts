@@ -33,6 +33,7 @@ router
     router.resource('channels', ChannelsController).apiOnly()
     router.post('channels/:id/messages', [MessageController, 'store']).as('messages.store')
     router.get('channels/:id/members', [MembersController, 'index']).as('members.index')
+    router.put('channels/:id/members', [MembersController, 'update']).as('members.update')
     router
       .delete('channels/:id/members/:nickname', [MembersController, 'destroy'])
       .as('members.destroy')
