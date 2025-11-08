@@ -13,7 +13,6 @@ test.group('Auth - Register', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: 'https://example.com/avatar.jpg',
     }
 
     const response = await client.post('/auth/register').json(userData)
@@ -39,7 +38,6 @@ test.group('Auth - Register', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: 'https://example.com/avatar.jpg',
     }
 
     await User.create({ ...userData, status: UserStatus.ONLINE })
@@ -61,7 +59,6 @@ test.group('Auth - Register', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: 'https://example.com/avatar.jpg',
     }
 
     await User.create({ ...userData, status: UserStatus.ONLINE })
@@ -83,7 +80,6 @@ test.group('Auth - Register', (group) => {
       nickname: 'John Doe!',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: 'https://example.com/avatar.jpg',
     }
 
     const response = await client.post('/auth/register').json(userData)
@@ -98,7 +94,6 @@ test.group('Auth - Register', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'pass',
-      avatar: 'https://example.com/avatar.jpg',
     }
 
     const response = await client.post('/auth/register').json(userData)
@@ -113,7 +108,6 @@ test.group('Auth - Register', (group) => {
       nickname: 'johndoe',
       email: 'invalid-email',
       password: 'password123',
-      avatar: 'https://example.com/avatar.jpg',
     }
 
     const response = await client.post('/auth/register').json(userData)
@@ -140,7 +134,6 @@ test.group('Auth - Login', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: 'https://example.com/avatar.jpg',
       status: UserStatus.ONLINE,
     }
 
@@ -169,7 +162,6 @@ test.group('Auth - Login', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: 'https://example.com/avatar.jpg',
       status: UserStatus.ONLINE,
     }
 
@@ -218,15 +210,12 @@ test.group('Auth - Logout', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: 'https://example.com/avatar.jpg',
       status: UserStatus.ONLINE,
     })
 
     const token = await User.accessTokens.create(user)
 
-    const response = await client
-      .delete('/auth/logout')
-      .bearerToken(token.value!.release())
+    const response = await client.delete('/auth/logout').bearerToken(token.value!.release())
 
     response.assertStatus(200)
     response.assertBodyContains({
@@ -260,7 +249,6 @@ test.group('Auth - Me', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: 'https://example.com/avatar.jpg',
       status: UserStatus.ONLINE,
     }
 
