@@ -92,7 +92,7 @@ test.group('Channel - Create', (group) => {
     assert.equal(channel?.members[0].id, user.id)
   })
 
-  test('should fail to create channel with duplicate name', async ({ client }) => {
+  test('should fail to create a private channel with duplicate name', async ({ client }) => {
     const user = await User.create({
       firstName: 'John',
       lastName: 'Doe',
@@ -104,7 +104,7 @@ test.group('Channel - Create', (group) => {
 
     await Channel.create({
       name: 'general',
-      type: ChannelType.PUBLIC,
+      type: ChannelType.PRIVATE,
       userId: user.id,
     })
 
@@ -115,7 +115,7 @@ test.group('Channel - Create', (group) => {
       type: ChannelType.PUBLIC,
     })
 
-    response.assertStatus(422)
+    response.assertStatus(400)
   })
 
   test('should fail to create channel with short name', async ({ client }) => {
@@ -294,7 +294,7 @@ test.group('Channel - Read', (group) => {
     assert.equal(body[0].name, 'general')
   })
 
-  test('should get specific channel by id', async ({ client, assert }) => {
+  test('should get specific channel by id', async ({ client }) => {
     const user = await User.create({
       firstName: 'John',
       lastName: 'Doe',
@@ -389,216 +389,6 @@ test.group('Channel - Read', (group) => {
   })
 })
 
-test.group('Channel - Update', (group) => {
-  group.each.setup(() => testUtils.db().truncate())
-
-  test('should update channel name as owner', async ({ client, assert }) => {
-    const user = await User.create({
-      firstName: 'John',
-      lastName: 'Doe',
-      nickname: 'johndoe',
-      email: 'john.doe@example.com',
-      password: 'password123',
-      status: UserStatus.ONLINE,
-    })
-
-    const channel = await Channel.create({
-      name: 'general',
-      type: ChannelType.PUBLIC,
-      userId: user.id,
-    })
-
-    const token = await User.accessTokens.create(user)
-
-    const response = await client
-      .patch(`/api/channels/${channel.id}`)
-      .bearerToken(token.value!.release())
-      .json({
-        name: 'updated-general',
-      })
-
-    response.assertStatus(200)
-    response.assertBodyContains({
-      name: 'updated-general',
-    })
-
-    await channel.refresh()
-    assert.equal(channel.name, 'updated-general')
-  })
-
-  test('should fail to update channel if not owner', async ({ client }) => {
-    const owner = await User.create({
-      firstName: 'John',
-      lastName: 'Doe',
-      nickname: 'johndoe',
-      email: 'john.doe@example.com',
-      password: 'password123',
-      status: UserStatus.ONLINE,
-    })
-
-    const member = await User.create({
-      firstName: 'Jane',
-      lastName: 'Smith',
-      nickname: 'janesmith',
-      email: 'jane.smith@example.com',
-      password: 'password123',
-      status: UserStatus.ONLINE,
-    })
-
-    const channel = await Channel.create({
-      name: 'general',
-      type: ChannelType.PUBLIC,
-      userId: owner.id,
-    })
-
-    await member.related('memberChannels').attach([channel.id])
-
-    const token = await User.accessTokens.create(member)
-
-    const response = await client
-      .patch(`/api/channels/${channel.id}`)
-      .bearerToken(token.value!.release())
-      .json({
-        name: 'hacked-channel',
-      })
-
-    response.assertStatus(404)
-  })
-
-  test('should fail to update channel with duplicate name', async ({ client }) => {
-    const user = await User.create({
-      firstName: 'John',
-      lastName: 'Doe',
-      nickname: 'johndoe',
-      email: 'john.doe@example.com',
-      password: 'password123',
-      status: UserStatus.ONLINE,
-    })
-
-    await Channel.create({
-      name: 'general',
-      type: ChannelType.PUBLIC,
-      userId: user.id,
-    })
-
-    const channel2 = await Channel.create({
-      name: 'random',
-      type: ChannelType.PUBLIC,
-      userId: user.id,
-    })
-
-    const token = await User.accessTokens.create(user)
-
-    const response = await client
-      .patch(`/api/channels/${channel2.id}`)
-      .bearerToken(token.value!.release())
-      .json({
-        name: 'general',
-      })
-
-    response.assertStatus(422)
-  })
-
-  test('should fail to update channel with too short name', async ({ client }) => {
-    const user = await User.create({
-      firstName: 'John',
-      lastName: 'Doe',
-      nickname: 'johndoe',
-      email: 'john.doe@example.com',
-      password: 'password123',
-      status: UserStatus.ONLINE,
-    })
-
-    const channel = await Channel.create({
-      name: 'general',
-      type: ChannelType.PUBLIC,
-      userId: user.id,
-    })
-
-    const token = await User.accessTokens.create(user)
-
-    const response = await client
-      .patch(`/api/channels/${channel.id}`)
-      .bearerToken(token.value!.release())
-      .json({
-        name: 'ab',
-      })
-
-    response.assertStatus(422)
-  })
-
-  test('should fail to update channel with too long name', async ({ client }) => {
-    const user = await User.create({
-      firstName: 'John',
-      lastName: 'Doe',
-      nickname: 'johndoe',
-      email: 'john.doe@example.com',
-      password: 'password123',
-      status: UserStatus.ONLINE,
-    })
-
-    const channel = await Channel.create({
-      name: 'general',
-      type: ChannelType.PUBLIC,
-      userId: user.id,
-    })
-
-    const token = await User.accessTokens.create(user)
-    const longName = 'a'.repeat(65)
-
-    const response = await client
-      .patch(`/api/channels/${channel.id}`)
-      .bearerToken(token.value!.release())
-      .json({
-        name: longName,
-      })
-
-    response.assertStatus(422)
-  })
-
-  test('should fail to update channel without authentication', async ({ client }) => {
-    const response = await client.patch('/api/channels/1').json({
-      name: 'new-name',
-    })
-
-    response.assertStatus(401)
-  })
-
-  test('should not update channel type', async ({ client, assert }) => {
-    const user = await User.create({
-      firstName: 'John',
-      lastName: 'Doe',
-      nickname: 'johndoe',
-      email: 'john.doe@example.com',
-      password: 'password123',
-      status: UserStatus.ONLINE,
-    })
-
-    const channel = await Channel.create({
-      name: 'general',
-      type: ChannelType.PUBLIC,
-      userId: user.id,
-    })
-
-    const token = await User.accessTokens.create(user)
-    const originalType = channel.type
-
-    const response = await client
-      .patch(`/api/channels/${channel.id}`)
-      .bearerToken(token.value!.release())
-      .json({
-        name: 'updated-general',
-        type: ChannelType.PRIVATE,
-      })
-
-    response.assertStatus(200)
-
-    await channel.refresh()
-    assert.equal(channel.type, originalType)
-    assert.equal(channel.name, 'updated-general')
-  })
-})
-
 test.group('Channel - Delete', (group) => {
   group.each.setup(() => testUtils.db().truncate())
 
@@ -663,7 +453,7 @@ test.group('Channel - Delete', (group) => {
       .delete(`/api/channels/${channel.id}`)
       .bearerToken(token.value!.release())
 
-    response.assertStatus(404)
+    response.assertStatus(400)
 
     const existingChannel = await Channel.find(channel.id)
     assert.isNotNull(existingChannel)

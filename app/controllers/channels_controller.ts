@@ -1,5 +1,7 @@
-import { storeValidator, updateValidator } from '#validators/channel_validator'
+import Channel from '#models/channel'
+import { storeValidator } from '#validators/channel_validator'
 import type { HttpContext } from '@adonisjs/core/http'
+import { ChannelType } from '../enums/channel_type.js'
 
 export default class ChannelsController {
   async index({ response, auth }: HttpContext) {
@@ -10,12 +12,17 @@ export default class ChannelsController {
     return response.ok(channels)
   }
 
+  //join
   async store({ request, response, auth }: HttpContext) {
     const user = auth.user!
 
     const validated = await request.validateUsing(storeValidator)
 
-    const channel = await user.related('ownedChannels').create({ ...validated })
+    let channel = await Channel.findBy({ name: validated.name })
+    if (!channel) channel = await user.related('ownedChannels').create({ ...validated })
+    else if (channel.type === ChannelType.PRIVATE)
+      return response.badRequest({ message: 'Cannot join private channel' })
+
     channel.related('members').attach([user.id])
 
     return response.created(channel)
@@ -28,27 +35,6 @@ export default class ChannelsController {
       .query()
       .where('channels.id', params.id)
       .firstOrFail()
-
-    return response.ok(channel)
-  }
-
-  async update({ request, response, auth, params }: HttpContext) {
-    const user = auth.user!
-    const channel = await user.related('ownedChannels').query().where('id', params.id).firstOrFail()
-
-    const validated = await request.validateUsing(updateValidator(channel.id))
-
-    channel.merge(validated)
-    await channel.save()
-
-    return response.ok(channel)
-  }
-
-  async destroy({ response, auth, params }: HttpContext) {
-    const user = auth.user!
-    const channel = await user.related('ownedChannels').query().where('id', params.id).firstOrFail()
-
-    await channel.delete()
 
     return response.ok(channel)
   }
