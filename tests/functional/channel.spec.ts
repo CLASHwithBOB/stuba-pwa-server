@@ -15,7 +15,6 @@ test.group('Channel - Create', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -47,7 +46,6 @@ test.group('Channel - Create', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -75,7 +73,6 @@ test.group('Channel - Create', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -102,7 +99,6 @@ test.group('Channel - Create', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -129,7 +125,6 @@ test.group('Channel - Create', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -150,7 +145,6 @@ test.group('Channel - Create', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -172,7 +166,6 @@ test.group('Channel - Create', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -202,7 +195,6 @@ test.group('Channel - Create', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -226,7 +218,6 @@ test.group('Channel - Read', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -265,7 +256,6 @@ test.group('Channel - Read', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -275,7 +265,6 @@ test.group('Channel - Read', (group) => {
       nickname: 'janesmith',
       email: 'jane.smith@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -312,7 +301,6 @@ test.group('Channel - Read', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -345,7 +333,6 @@ test.group('Channel - Read', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -355,7 +342,6 @@ test.group('Channel - Read', (group) => {
       nickname: 'janesmith',
       email: 'jane.smith@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -389,7 +375,6 @@ test.group('Channel - Read', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -414,7 +399,6 @@ test.group('Channel - Update', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -449,7 +433,6 @@ test.group('Channel - Update', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -459,7 +442,6 @@ test.group('Channel - Update', (group) => {
       nickname: 'janesmith',
       email: 'jane.smith@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -490,7 +472,6 @@ test.group('Channel - Update', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -525,7 +506,6 @@ test.group('Channel - Update', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -554,7 +534,6 @@ test.group('Channel - Update', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -592,7 +571,6 @@ test.group('Channel - Update', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -631,7 +609,6 @@ test.group('Channel - Delete', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -660,7 +637,6 @@ test.group('Channel - Delete', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -670,7 +646,6 @@ test.group('Channel - Delete', (group) => {
       nickname: 'janesmith',
       email: 'jane.smith@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -701,7 +676,6 @@ test.group('Channel - Delete', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -725,7 +699,6 @@ test.group('Channel - Delete', (group) => {
       nickname: 'johndoe',
       email: 'john.doe@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
@@ -735,7 +708,6 @@ test.group('Channel - Delete', (group) => {
       nickname: 'janesmith',
       email: 'jane.smith@example.com',
       password: 'password123',
-      avatar: null,
       status: UserStatus.ONLINE,
     })
 
