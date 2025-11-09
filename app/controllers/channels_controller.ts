@@ -26,7 +26,7 @@ export default class ChannelsController {
     const channel = await user
       .related('memberChannels')
       .query()
-      .where('id', params.id)
+      .where('channels.id', params.id)
       .firstOrFail()
 
     return response.ok(channel)
