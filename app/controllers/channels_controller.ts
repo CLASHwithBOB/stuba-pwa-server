@@ -12,6 +12,7 @@ export default class ChannelsController {
     return response.ok(channels)
   }
 
+  //join
   async store({ request, response, auth }: HttpContext) {
     const user = auth.user!
 
@@ -34,27 +35,6 @@ export default class ChannelsController {
       .query()
       .where('channels.id', params.id)
       .firstOrFail()
-
-    return response.ok(channel)
-  }
-
-  async update({ request, response, auth, params }: HttpContext) {
-    const user = auth.user!
-    const channel = await user.related('ownedChannels').query().where('id', params.id).firstOrFail()
-
-    const validated = await request.validateUsing(updateValidator(channel.id))
-
-    channel.merge(validated)
-    await channel.save()
-
-    return response.ok(channel)
-  }
-
-  async destroy({ response, auth, params }: HttpContext) {
-    const user = auth.user!
-    const channel = await user.related('ownedChannels').query().where('id', params.id).firstOrFail()
-
-    await channel.delete()
 
     return response.ok(channel)
   }

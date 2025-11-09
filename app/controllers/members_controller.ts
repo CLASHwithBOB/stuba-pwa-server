@@ -4,6 +4,7 @@ import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class MembersController {
+  //list
   async index({ response, params }: HttpContext) {
     const channel = await Channel.findOrFail(params.id)
 
@@ -12,6 +13,7 @@ export default class MembersController {
     return response.ok(members)
   }
 
+  //cancel
   async update({ response, auth, params }: HttpContext) {
     const user = auth.user!
 
@@ -33,6 +35,7 @@ export default class MembersController {
     return response.ok({ message: `You have left the channel` })
   }
 
+  //kick
   async destroy({ response, auth, params }: HttpContext) {
     const user = auth.user!
 

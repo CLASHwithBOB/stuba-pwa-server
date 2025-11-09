@@ -9,7 +9,8 @@ const MeController = () => import('#controllers/auth/me_controller')
 const UsersController = () => import('#controllers/users_controller')
 const ChannelsController = () => import('#controllers/channels_controller')
 const MembersController = () => import('#controllers/members_controller')
-const MessageController = () => import('#controllers/messages_controller')
+const AdminsController = () => import('#controllers/admins_controller')
+// const MessageController = () => import('#controllers/messages_controller')
 
 router
   .group(() => {
@@ -30,8 +31,9 @@ router
   .group(() => {
     router.patch('user', [UsersController, 'update']).as('user.update')
 
-    router.resource('channels', ChannelsController).apiOnly()
-    router.post('channels/:id/messages', [MessageController, 'store']).as('messages.store')
+    router.resource('channels', ChannelsController).only(['index', 'store', 'show'])
+    router.delete('channels/:id', [AdminsController, 'destroy']).as('channels.destroy')
+    // router.post('channels/:id/messages', [MessageController, 'store']).as('messages.store')
     router.get('channels/:id/members', [MembersController, 'index']).as('members.index')
     router.put('channels/:id/members', [MembersController, 'update']).as('members.update')
     router
