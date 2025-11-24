@@ -36,6 +36,7 @@ router
     // router.post('channels/:id/messages', [MessageController, 'store']).as('messages.store')
     router.get('channels/:id/members', [MembersController, 'index']).as('members.index')
     router.put('channels/:id/members', [MembersController, 'update']).as('members.update')
+    router.post('channels/:id/members/:nickname', [MembersController, 'store']).as('members.store')
     router
       .delete('channels/:id/members/:nickname', [MembersController, 'destroy'])
       .as('members.destroy')
