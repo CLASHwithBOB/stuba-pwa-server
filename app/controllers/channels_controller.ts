@@ -7,7 +7,7 @@ export default class ChannelsController {
   async index({ response, auth }: HttpContext) {
     const user = auth.user!
 
-    const channels = await user.related('memberChannels').query()
+    const channels = await user.related('memberChannels').query().whereNull('kicked_at')
 
     return response.ok(channels)
   }

@@ -2,6 +2,7 @@ import Channel from '#models/channel'
 import ChannelKickVote from '#models/channel_kick_vote'
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
+import { ChannelType } from '../enums/channel_type.js'
 
 export default class MembersController {
   //list
@@ -11,6 +12,46 @@ export default class MembersController {
     const members = await channel.related('members').query().whereNull('kicked_at')
 
     return response.ok(members)
+  }
+
+  //invite
+  async store({ response, auth, params }: HttpContext) {
+    const user = auth.user!
+
+    const channel = await Channel.findOrFail(params.id)
+
+    if (channel.type === ChannelType.PRIVATE && channel.userId !== user.id) {
+      return response.badRequest({
+        message: 'Only the channel admin can invite members to a private channel',
+      })
+    }
+
+    const target = await User.findBy({ nickname: params.nickname })
+    if (!target) {
+      return response.notFound({ message: `User ${params.nickname} not found` })
+    }
+
+    const channelUser = await channel.related('members').query().where('user_id', target.id).first()
+
+    if (!channelUser) {
+      channel.related('members').attach([target.id])
+    } else if (channelUser.$extras.pivot_kicked_at === null) {
+      return response.badRequest({
+        message: `${target.nickname} is already a member of the channel`,
+      })
+    } else if (channel.userId === user.id) {
+      await channel
+        .related('members')
+        .query()
+        .where('user_id', target.id)
+        .update({ kicked_at: null })
+    } else {
+      return response.badRequest({
+        message: 'Only the channel admin can re-invite a kicked member',
+      })
+    }
+
+    return response.ok({ message: `${target.nickname} has been added to the channel` })
   }
 
   //cancel
