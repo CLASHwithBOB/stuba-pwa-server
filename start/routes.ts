@@ -32,7 +32,8 @@ router
     router.patch('user', [UsersController, 'update']).as('user.update')
 
     router.resource('channels', ChannelsController).only(['index', 'store', 'show'])
-    router.delete('channels/:id', [AdminsController, 'destroy']).as('channels.destroy')
+    router.delete('channels/:id', [AdminsController, 'destroy']).as('admins.destroy')
+    router.put('channels/:id/members/:nickname', [AdminsController, 'update']).as('admins.update')
     // router.post('channels/:id/messages', [MessageController, 'store']).as('messages.store')
     router.get('channels/:id/members', [MembersController, 'index']).as('members.index')
     router.put('channels/:id/members', [MembersController, 'update']).as('members.update')
