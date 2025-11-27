@@ -34,7 +34,11 @@ export default class MembersController {
     const channelUser = await channel.related('members').query().where('user_id', target.id).first()
 
     if (!channelUser) {
-      channel.related('members').attach([target.id])
+      await channel.related('members').attach({
+        [target.id]: {
+          invitedRecently: true,
+        },
+      })
     } else if (channelUser.$extras.pivot_kicked_at === null) {
       return response.badRequest({
         message: `${target.nickname} is already a member of the channel`,

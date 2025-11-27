@@ -7,9 +7,23 @@ export default class ChannelsController {
   async index({ response, auth }: HttpContext) {
     const user = auth.user!
 
-    const channels = await user.related('memberChannels').query().whereNull('kicked_at')
+    const channels = await user
+      .related('memberChannels')
+      .query()
+      .whereNull('kicked_at')
+      .orderBy('members.invited_recently', 'desc')
 
-    return response.ok(channels)
+    const channelsData = channels.map((channel) => ({
+      id: channel.id,
+      userId: channel.userId,
+      name: channel.name,
+      type: channel.type,
+      createdAt: channel.createdAt,
+      updatedAt: channel.updatedAt,
+      invitedRecently: channel.$extras.pivot_invited_recently,
+    }))
+
+    return response.ok(channelsData)
   }
 
   //join
@@ -38,6 +52,14 @@ export default class ChannelsController {
         query.select(['id', 'nickname', 'avatar', 'status'])
       })
       .firstOrFail()
+
+    if (channel.$extras.pivot_invited_recently) {
+      await channel
+        .related('members')
+        .query()
+        .where('user_id', user.id)
+        .update({ invited_recently: false })
+    }
 
     return response.ok(channel)
   }
