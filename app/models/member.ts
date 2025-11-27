@@ -17,6 +17,9 @@ export default class Member extends BaseModel {
   @column()
   declare kickedAt: DateTime | null
 
+  @column()
+  declare invitedRecently: boolean
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

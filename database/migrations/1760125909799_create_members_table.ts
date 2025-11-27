@@ -10,6 +10,7 @@ export default class extends BaseSchema {
       table.integer('user_id').references('id').inTable('users').onDelete('CASCADE').index()
 
       table.timestamp('kicked_at').nullable()
+      table.boolean('invited_recently').defaultTo(false)
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
