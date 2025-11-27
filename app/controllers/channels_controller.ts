@@ -34,6 +34,9 @@ export default class ChannelsController {
       .related('memberChannels')
       .query()
       .where('channels.id', params.id)
+      .preload('members', (query) => {
+        query.select(['id', 'nickname', 'avatar', 'status'])
+      })
       .firstOrFail()
 
     return response.ok(channel)
