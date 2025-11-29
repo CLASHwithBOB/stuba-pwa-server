@@ -36,7 +36,7 @@ export default class MembersController {
     if (!channelUser) {
       await channel.related('members').attach({
         [target.id]: {
-          invitedRecently: true,
+          invited_recently: true,
         },
       })
     } else if (channelUser.$extras.pivot_kicked_at === null) {

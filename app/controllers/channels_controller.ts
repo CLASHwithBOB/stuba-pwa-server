@@ -51,6 +51,9 @@ export default class ChannelsController {
       .preload('members', (query) => {
         query.select(['id', 'nickname', 'avatar', 'status'])
       })
+      .preload('messages', (query) => {
+        query.orderBy('created_at', 'asc')
+      })
       .firstOrFail()
 
     if (channel.$extras.pivot_invited_recently) {

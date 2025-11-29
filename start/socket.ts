@@ -1,3 +1,4 @@
+import Message from '#models/message'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 
@@ -25,6 +26,21 @@ io.on('connection', (socket) => {
   socket.on('typing', ({ channelId, text, userId }) => {
     io.to(`channel:${channelId}`).emit('typing', {
       text,
+      userId,
+      channelId,
+    })
+  })
+
+  socket.on('message', async ({ channelId, text, userId }) => {
+    const message = await Message.create({
+      channelId,
+      content: text,
+      userId,
+    })
+
+    io.to(`channel:${channelId}`).emit('message', message)
+    io.to(`channel:${channelId}`).emit('typing', {
+      text: '',
       userId,
       channelId,
     })
