@@ -8,9 +8,9 @@ const MeController = () => import('#controllers/auth/me_controller')
 
 const UsersController = () => import('#controllers/users_controller')
 const ChannelsController = () => import('#controllers/channels_controller')
+const MessagesController = () => import('#controllers/messages_controller')
 const MembersController = () => import('#controllers/members_controller')
 const AdminsController = () => import('#controllers/admins_controller')
-// const MessageController = () => import('#controllers/messages_controller')
 
 router
   .group(() => {
@@ -34,7 +34,7 @@ router
     router.resource('channels', ChannelsController).only(['index', 'store', 'show'])
     router.delete('channels/:id', [AdminsController, 'destroy']).as('admins.destroy')
     router.put('channels/:id/members/:nickname', [AdminsController, 'update']).as('admins.update')
-    // router.post('channels/:id/messages', [MessageController, 'store']).as('messages.store')
+    router.get('channels/:id/messages', [MessagesController, 'index']).as('messages.index')
     router.get('channels/:id/members', [MembersController, 'index']).as('members.index')
     router.put('channels/:id/members', [MembersController, 'update']).as('members.update')
     router.post('channels/:id/members/:nickname', [MembersController, 'store']).as('members.store')

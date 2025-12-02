@@ -1,21 +1,20 @@
-import { storeValidator } from '#validators/message_validator'
+import Message from '#models/message'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class MessagesController {
-  async store({ request, response, auth, params }: HttpContext) {
-    return response.notImplemented()
-    // const user = auth.user!
+  async index({ request, params }: HttpContext) {
+    const channelId = params.id
+    const beforeId = request.input('beforeId')
 
-    // const channel = await user
-    //   .related('memberChannels')
-    //   .query()
-    //   .where('id', params.id)
-    //   .firstOrFail()
+    const query = Message.query()
+      .where('channel_id', channelId)
+      .orderBy('id', 'desc')
+      .limit(20)
+      .if(beforeId, (q) => {
+        q.where('id', '<', beforeId)
+      })
 
-    // const { content } = await request.validateUsing(storeValidator)
-
-    // const message = await channel.related('').create({ content, userId: user.id })
-
-    // return response.created({ message })
+    const messages = await query
+    return messages.reverse()
   }
 }

@@ -5,7 +5,7 @@ import { DateTime } from 'luxon'
 
 export default class DeleteInactiveChannels extends BaseCommand {
   static commandName = 'delete:inactive-channels'
-  static description = ''
+  static description = "Deletes channels that haven't had messages in the last 30 days"
 
   static options: CommandOptions = {}
 
