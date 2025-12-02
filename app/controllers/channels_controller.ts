@@ -52,7 +52,7 @@ export default class ChannelsController {
         query.select(['id', 'nickname', 'avatar', 'status'])
       })
       .preload('messages', (query) => {
-        query.orderBy('created_at', 'asc')
+        query.orderBy('created_at', 'desc').limit(1)
       })
       .firstOrFail()
 
