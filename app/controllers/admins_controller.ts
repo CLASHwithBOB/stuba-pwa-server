@@ -2,6 +2,7 @@ import Channel from '#models/channel'
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { ChannelType } from '../enums/channel_type.js'
+import socket from '../../start/socket.js'
 
 export default class AdminsController {
   //revoke
@@ -43,6 +44,8 @@ export default class AdminsController {
     }
 
     await channel.related('members').query().where('user_id', target.id).delete()
+
+    socket.to(`user:${target.id}`).emit('channel-kick')
 
     return response.ok({ message: `${target.nickname} has been removed from the channel` })
   }
