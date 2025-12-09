@@ -20,6 +20,7 @@ export const updateValidator = (userId: number) =>
         })
         .optional(),
       status: vine.enum(Object.values(UserStatus)).optional(),
-      avatar: vine.string().url().optional(),
+      avatar: vine.string().url().nullable().optional(),
+      taggedNotificationsOnly: vine.boolean().optional(),
     })
   )

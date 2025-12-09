@@ -18,11 +18,6 @@ io.on('connection', (socket) => {
     socket.join(`channel:${channelId}`)
   })
 
-  socket.on('leave-channel', (channelId) => {
-    console.log(`Socket ${socket.id} left channel ${channelId}`)
-    socket.leave(`channel:${channelId}`)
-  })
-
   socket.on('typing', ({ channelId, text, userId }) => {
     io.to(`channel:${channelId}`).emit('typing', {
       text,
