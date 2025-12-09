@@ -15,20 +15,39 @@ export default class ChannelsController {
       .preload('members', (query) => {
         query.select(['id', 'nickname', 'avatar', 'status'])
       })
+      .preload('messages', (query) => {
+        query
+          .orderBy('created_at', 'desc')
+          .limit(1)
+          .preload('user', (userQuery) => {
+            userQuery.select('nickname')
+          })
+      })
 
-    const channelsData = channels.map((channel) => ({
-      id: channel.id,
-      userId: channel.userId,
-      name: channel.name,
-      type: channel.type,
-      createdAt: channel.createdAt,
-      updatedAt: channel.updatedAt,
-      invitedRecently: channel.$extras.pivot_invited_recently,
-      members: channel.members.map((m) => ({
-        id: m.id,
-        nickname: m.nickname,
-      })),
-    }))
+    const channelsData = channels.map((channel) => {
+      let lastMessage = null
+      if (channel.messages && channel.messages.length > 0) {
+        const msg = channel.messages[0]
+        lastMessage = {
+          content: msg.content,
+          userNickname: msg.user.nickname,
+        }
+      }
+      return {
+        id: channel.id,
+        userId: channel.userId,
+        name: channel.name,
+        type: channel.type,
+        createdAt: channel.createdAt,
+        updatedAt: channel.updatedAt,
+        invitedRecently: channel.$extras.pivot_invited_recently,
+        members: channel.members.map((m) => ({
+          id: m.id,
+          nickname: m.nickname,
+        })),
+        lastMessage,
+      }
+    })
 
     return response.ok(channelsData)
   }
