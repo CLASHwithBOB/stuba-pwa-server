@@ -13,6 +13,11 @@ const io = new Server(httpServer, {
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id)
 
+  socket.on('register', (userId) => {
+    console.log(`Socket ${socket.id} registered for user ${userId}`)
+    socket.join(`user:${userId}`)
+  })
+
   socket.on('join-channel', (channelId) => {
     console.log(`Socket ${socket.id} joined channel ${channelId}`)
     socket.join(`channel:${channelId}`)

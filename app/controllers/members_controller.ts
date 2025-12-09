@@ -3,6 +3,7 @@ import ChannelKickVote from '#models/channel_kick_vote'
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { ChannelType } from '../enums/channel_type.js'
+import socket from '../../start/socket.js'
 
 export default class MembersController {
   //list
@@ -33,12 +34,14 @@ export default class MembersController {
 
     const channelUser = await channel.related('members').query().where('user_id', target.id).first()
 
+    let invited = false
     if (!channelUser) {
       await channel.related('members').attach({
         [target.id]: {
           invited_recently: true,
         },
       })
+      invited = true
     } else if (channelUser.$extras.pivot_kicked_at === null) {
       return response.badRequest({
         message: `${target.nickname} is already a member of the channel`,
@@ -49,10 +52,15 @@ export default class MembersController {
         .query()
         .where('user_id', target.id)
         .update({ kicked_at: null })
+      invited = true
     } else {
       return response.badRequest({
         message: 'Only the channel admin can re-invite a kicked member',
       })
+    }
+
+    if (invited) {
+      socket.to(`user:${target.id}`).emit('channel-invitation')
     }
 
     return response.ok({ message: `${target.nickname} has been added to the channel` })
@@ -135,6 +143,8 @@ export default class MembersController {
       .where('channel_id', channel.id)
       .andWhere('target_user_id', target.id)
       .delete()
+
+    socket.to(`user:${target.id}`).emit('channel-kick')
 
     return response.ok({ message: `${target.nickname} has been removed from the channel` })
   }
