@@ -8,6 +8,7 @@ export default class RegisterController {
     const validated = {
       ...(await request.validateUsing(registerValidator)),
       status: UserStatus.ONLINE,
+      taggedNotificationsOnly: false,
     }
 
     const user = await User.create(validated)

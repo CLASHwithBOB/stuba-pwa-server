@@ -34,6 +34,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare avatar: string | null
 
   @column()
+  declare taggedNotificationsOnly: boolean
+
+  @column()
   declare status: UserStatus
 
   @column({ serializeAs: null })

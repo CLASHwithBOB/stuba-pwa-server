@@ -10,8 +10,11 @@ export default class ChannelsController {
     const channels = await user
       .related('memberChannels')
       .query()
-      .whereNull('kicked_at')
+      .whereNull('members.kicked_at')
       .orderBy('members.invited_recently', 'desc')
+      .preload('members', (query) => {
+        query.select(['id', 'nickname', 'avatar', 'status'])
+      })
 
     const channelsData = channels.map((channel) => ({
       id: channel.id,
@@ -21,6 +24,10 @@ export default class ChannelsController {
       createdAt: channel.createdAt,
       updatedAt: channel.updatedAt,
       invitedRecently: channel.$extras.pivot_invited_recently,
+      members: channel.members.map((m) => ({
+        id: m.id,
+        nickname: m.nickname,
+      })),
     }))
 
     return response.ok(channelsData)
@@ -50,9 +57,6 @@ export default class ChannelsController {
       .where('channels.id', params.id)
       .preload('members', (query) => {
         query.select(['id', 'nickname', 'avatar', 'status'])
-      })
-      .preload('messages', (query) => {
-        query.orderBy('created_at', 'desc').limit(1)
       })
       .firstOrFail()
 
